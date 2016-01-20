@@ -1,0 +1,29 @@
+// Gradle file for building the project
+
+apply plugin: 'java'
+  repositories {
+    mavenCentral()
+}
+  dependencies {
+    compile 'org.lwjgl.lwjgl:lwjgl:2.8.2'
+}
+  task natives {
+    //resolvedArtifacts = configurations.compile.resolvedConfiguration.resolvedArtifacts
+    //osNatives('windows', resolvedArtifacts)
+    //osNatives('linux', resolvedArtifacts)
+    //osNatives('osx', resolvedArtifacts)
+}
+   def osNatives(os, artifacts) {
+    copy {
+        classifier = 'natives-' + os
+        matches = artifacts.findAll { it.classifier == classifier }
+        from matches.collect { it.file }.collect { zipTree(it) }
+        into "$buildDir/natives/" + os
+    }
+}
+/*
+org.lwjgl:lwjgl:${version}
+org.lwjgl:lwjgl-platform:${version}:natives-windows
+org.lwjgl:lwjgl-platform:${version}:natives-linux
+org.lwjgl:lwjgl-platform:${version}:natives-osx
+*/
